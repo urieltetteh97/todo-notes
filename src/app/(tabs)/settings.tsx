@@ -17,9 +17,10 @@ import { getPermissionState } from '../../calendar/calendarService';
 import type { PermissionState } from '../../calendar/status';
 import { GradientHeader } from '../../components/GradientHeader';
 import { useFocusLoad } from '../../hooks/useFocusLoad';
+import { useTheme, useThemedStyles } from '../../hooks/useTheme';
 import { loadSyncSettings, saveCompletionBehavior, saveSyncEnabled } from '../../services/syncSettings';
 import { syncAllTasks } from '../../services/taskService';
-import { colors, HIT, radius } from '../../theme';
+import { HIT, radius, type ThemeColors } from '../../theme';
 import { DEFAULT_SYNC_SETTINGS, type CompletionBehavior, type SyncSettings } from '../../types';
 
 const BEHAVIORS: { value: CompletionBehavior; label: string; hint: string }[] = [
@@ -28,6 +29,8 @@ const BEHAVIORS: { value: CompletionBehavior; label: string; hint: string }[] = 
 ];
 
 export default function SettingsScreen() {
+  const { colors, isDarkMode, appearanceLoaded, setDarkMode } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [settings, setSettings] = useState<SyncSettings>(DEFAULT_SYNC_SETTINGS);
   const [permission, setPermission] = useState<PermissionState>('undetermined');
   const lastPermission = useRef<PermissionState | null>(null);
@@ -85,6 +88,27 @@ export default function SettingsScreen() {
       <GradientHeader title="Settings" />
       <ScrollView contentContainerStyle={styles.content}>
         <Text accessibilityRole="header" style={styles.section}>
+          Appearance
+        </Text>
+
+        <View style={styles.row}>
+          <View style={styles.rowText}>
+            <Text style={styles.rowTitle}>Dark mode</Text>
+            <Text style={styles.rowHint}>Use a darker color scheme</Text>
+          </View>
+          <Switch
+            accessibilityLabel="Dark mode"
+            value={isDarkMode}
+            disabled={!appearanceLoaded}
+            onValueChange={(enabled) =>
+              setDarkMode(enabled).catch((error) => console.warn('Save appearance preference failed', error))
+            }
+            trackColor={{ false: colors.trackOff, true: colors.primary }}
+            thumbColor="#FFFFFF"
+          />
+        </View>
+
+        <Text accessibilityRole="header" style={styles.section}>
           Calendar sync
         </Text>
 
@@ -98,7 +122,7 @@ export default function SettingsScreen() {
             value={settings.syncEnabled}
             onValueChange={toggleSync}
             trackColor={{ false: colors.trackOff, true: colors.primary }}
-            thumbColor={colors.white}
+            thumbColor="#FFFFFF"
           />
         </View>
 
@@ -165,7 +189,8 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
   content: { paddingBottom: 48 },
   section: {
@@ -212,4 +237,5 @@ const styles = StyleSheet.create({
   },
   radioOn: { borderColor: colors.accent },
   radioDot: { width: 12, height: 12, borderRadius: 6, backgroundColor: colors.accent },
-});
+  });
+}

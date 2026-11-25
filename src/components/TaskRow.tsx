@@ -2,7 +2,8 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { Task } from '../types';
 import { describeDue } from '../utils/dates';
-import { colors, HIT } from '../theme';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
+import { HIT, type ThemeColors } from '../theme';
 
 type Props = {
   task: Task;
@@ -14,6 +15,8 @@ type Props = {
 };
 
 export function TaskRow({ task, today, hasNotes, onToggle, onOpen, onLongPress }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const subtitle = describeDue(task, today);
   const synced = task.calendarEventId !== null;
   const spoken = [
@@ -61,7 +64,8 @@ export function TaskRow({ task, today, hasNotes, onToggle, onOpen, onLongPress }
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -87,4 +91,5 @@ const styles = StyleSheet.create({
   titleDone: { textDecorationLine: 'line-through', color: colors.muted },
   subtitle: { fontSize: 13, color: colors.muted, marginTop: 2 },
   icons: { flexDirection: 'row', gap: 8, marginLeft: 6 },
-});
+  });
+}

@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, HIT } from '../theme';
+import { useThemedStyles } from '../hooks/useTheme';
+import { HIT, type ThemeColors } from '../theme';
 
 type Option<T extends string> = { value: T; label: string };
 
@@ -16,6 +17,7 @@ export function SegmentedControl<T extends string>({
   onChange,
   accessibilityLabel,
 }: Props<T>) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View accessibilityRole="tablist" accessibilityLabel={accessibilityLabel} style={styles.track}>
       {options.map((o) => {
@@ -36,10 +38,11 @@ export function SegmentedControl<T extends string>({
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   track: {
     flexDirection: 'row',
-    backgroundColor: '#EDE9FE',
+    backgroundColor: colors.soft,
     borderRadius: 12,
     padding: 3,
     gap: 3,
@@ -54,4 +57,5 @@ const styles = StyleSheet.create({
   segmentSelected: { backgroundColor: colors.primary },
   label: { fontSize: 14, fontWeight: '600', color: colors.accent },
   labelSelected: { fontWeight: '700', color: colors.ink },
-});
+  });
+}

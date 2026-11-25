@@ -16,7 +16,8 @@ import { GradientHeader } from '../../components/GradientHeader';
 import { HeaderButton } from '../../components/HeaderButton';
 import { getNote, softDeleteNote, updateNote } from '../../db/notesRepo';
 import { getTask } from '../../db/tasksRepo';
-import { colors, HIT } from '../../theme';
+import { useTheme, useThemedStyles } from '../../hooks/useTheme';
+import { HIT, type ThemeColors } from '../../theme';
 import {
   BULLET,
   CHECKBOX,
@@ -28,6 +29,8 @@ import {
 const AUTOSAVE_MS = 600;
 
 export default function NoteEditor() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [ready, setReady] = useState(false);
@@ -254,7 +257,8 @@ export default function NoteEditor() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
   flex: { flex: 1 },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 4 },
@@ -303,4 +307,5 @@ const styles = StyleSheet.create({
   tool: { width: HIT, height: HIT, alignItems: 'center', justifyContent: 'center' },
   missing: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   missingText: { fontSize: 16, color: colors.muted },
-});
+  });
+}

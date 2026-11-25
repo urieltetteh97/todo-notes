@@ -6,12 +6,15 @@ import { Fab } from '../../components/Fab';
 import { GradientHeader } from '../../components/GradientHeader';
 import { insertNote, listNotes } from '../../db/notesRepo';
 import { useFocusLoad } from '../../hooks/useFocusLoad';
-import { colors } from '../../theme';
+import { useTheme, useThemedStyles } from '../../hooks/useTheme';
+import type { ThemeColors } from '../../theme';
 import type { Note } from '../../types';
 import { formatNoteDate } from '../../utils/dates';
 import { firstLine } from '../../utils/text';
 
 export default function NotesScreen() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [query, setQuery] = useState('');
   const [notes, setNotes] = useState<Note[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -95,7 +98,8 @@ export default function NotesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
   searchWrap: { paddingHorizontal: 20, paddingTop: 14, paddingBottom: 8 },
   search: {
@@ -123,4 +127,5 @@ const styles = StyleSheet.create({
   rowDate: { fontSize: 12, color: colors.muted, marginTop: 6 },
   empty: { alignItems: 'center', paddingTop: 64, paddingHorizontal: 32 },
   emptyText: { fontSize: 16, color: colors.muted, textAlign: 'center' },
-});
+  });
+}

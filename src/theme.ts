@@ -1,5 +1,5 @@
 // Purple palette from the approved wireframes.
-export const colors = {
+export const lightColors = {
   ink: '#1E1233',
   muted: '#4C3F6B',
   primary: '#A78BFA', // buttons, selected controls, toggles on
@@ -16,6 +16,26 @@ export const colors = {
   gradientFrom: '#DDD6FE',
   gradientTo: '#F5D0FE',
 } as const;
+
+export const darkColors: ThemeColors = {
+  ink: '#F4EEFF',
+  muted: '#B9ACCD',
+  primary: '#A78BFA',
+  accent: '#C4B5FD',
+  border: '#493B60',
+  divider: '#30253F',
+  soft: '#292137',
+  softAlt: '#211A2D',
+  chipBorder: '#76629B',
+  pill: '#5B3063',
+  trackOff: '#594E67',
+  white: '#17121F',
+  overlay: 'rgba(0, 0, 0, 0.62)',
+  gradientFrom: '#302344',
+  gradientTo: '#42243E',
+};
+
+export type ThemeColors = { [K in keyof typeof lightColors]: string };
 
 export const radius = { chip: 22, card: 14, input: 12, button: 12 } as const;
 

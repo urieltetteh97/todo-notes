@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, HIT, radius } from '../theme';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
+import { HIT, radius, type ThemeColors } from '../theme';
 import { formatDateShort, formatTime, nextHour, toDateString, toTimeString } from '../utils/dates';
 
 type Props = {
@@ -25,6 +26,8 @@ export function DateField({
   clearable = false,
   accessibilityLabel,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const label = value
     ? mode === 'date'
       ? formatDateShort(toDateString(value))
@@ -93,7 +96,8 @@ export function DateField({
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center' },
   chip: {
     minHeight: HIT,
@@ -108,4 +112,5 @@ const styles = StyleSheet.create({
   },
   chipText: { fontSize: 14, color: colors.ink },
   clear: { width: HIT, height: HIT, alignItems: 'center', justifyContent: 'center' },
-});
+  });
+}

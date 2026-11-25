@@ -8,8 +8,9 @@ import { TaskRow } from '../../components/TaskRow';
 import { listTasks, type TaskFilter } from '../../db/tasksRepo';
 import { taskIdsWithNotes } from '../../db/notesRepo';
 import { useFocusLoad } from '../../hooks/useFocusLoad';
+import { useThemedStyles } from '../../hooks/useTheme';
 import { deleteTask, toggleDone } from '../../services/taskService';
-import { colors, HIT } from '../../theme';
+import { HIT, type ThemeColors } from '../../theme';
 import type { Task } from '../../types';
 import { formatDateLong, todayString } from '../../utils/dates';
 import { groupTasks } from '../../utils/groupTasks';
@@ -33,6 +34,7 @@ const EMPTY: Record<TaskFilter, string> = {
 };
 
 export default function TasksScreen() {
+  const styles = useThemedStyles(createStyles);
   const [filter, setFilter] = useState<TaskFilter>('today');
   const [tasks, setTasks] = useState<Task[]>([]);
   const [withNotes, setWithNotes] = useState<Set<string>>(new Set());
@@ -132,7 +134,8 @@ export default function TasksScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
   segmentWrap: { paddingHorizontal: 20, paddingTop: 14, paddingBottom: 8 },
   listContent: { paddingBottom: 120 },
@@ -157,4 +160,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyButtonText: { fontSize: 16, fontWeight: '700', color: colors.ink },
-});
+  });
+}

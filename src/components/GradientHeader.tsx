@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../theme';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
+import type { ThemeColors } from '../theme';
 
 type Props = {
   title?: string;
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export function GradientHeader({ title, subtitle, left, right }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const insets = useSafeAreaInsets();
   const hasBar = Boolean(left || right);
 
@@ -39,7 +42,8 @@ export function GradientHeader({ title, subtitle, left, right }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   base: {
     paddingHorizontal: 20,
     paddingBottom: 18,
@@ -51,4 +55,5 @@ const styles = StyleSheet.create({
   spacer: { flex: 1 },
   title: { fontSize: 30, lineHeight: 36, fontWeight: '800', color: colors.ink },
   subtitle: { fontSize: 14, color: colors.muted },
-});
+  });
+}

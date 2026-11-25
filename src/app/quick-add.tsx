@@ -13,9 +13,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { DateField } from '../components/DateField';
 import { SegmentedControl } from '../components/SegmentedControl';
 import { insertNote } from '../db/notesRepo';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
 import { shouldAskForCalendarAccess } from '../services/calendarPrompt';
 import { createTask } from '../services/taskService';
-import { colors, HIT, radius } from '../theme';
+import { HIT, radius, type ThemeColors } from '../theme';
 import { toDateString, toTimeString } from '../utils/dates';
 
 type Kind = 'task' | 'note';
@@ -26,6 +27,8 @@ const KINDS: { value: Kind; label: string }[] = [
 ];
 
 export default function QuickAdd() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const insets = useSafeAreaInsets();
   const [kind, setKind] = useState<Kind>('task');
   const [text, setText] = useState('');
@@ -103,7 +106,7 @@ export default function QuickAdd() {
                 <DateField
                   mode="date"
                   value={date}
-                  onChange={changeDate}
+                  onValueChange={changeDate}
                   placeholder="Add date"
                   accessibilityLabel="Due date"
                   clearable
@@ -112,7 +115,7 @@ export default function QuickAdd() {
                   <DateField
                     mode="time"
                     value={time}
-                    onChange={(d) => setTime(d ?? null)}
+                    onValueChange={(d) => setTime(d ?? null)}
                     placeholder="Add time"
                     accessibilityLabel="Due time"
                     clearable
@@ -139,7 +142,8 @@ export default function QuickAdd() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   root: { flex: 1, justifyContent: 'flex-end' },
   backdrop: {
     position: 'absolute',
@@ -189,4 +193,5 @@ const styles = StyleSheet.create({
   },
   saveDisabled: { opacity: 0.5 },
   saveText: { fontSize: 16, fontWeight: '800', color: colors.ink },
-});
+  });
+}

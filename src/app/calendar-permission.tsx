@@ -7,9 +7,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { requestPermission } from '../calendar/calendarService';
 import { dismissCalendarPrompt } from '../services/syncSettings';
 import { syncAllTasks } from '../services/taskService';
-import { colors, radius } from '../theme';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
+import { radius, type ThemeColors } from '../theme';
 
 export default function CalendarPermission() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const insets = useSafeAreaInsets();
   const [busy, setBusy] = useState(false);
 
@@ -73,7 +76,8 @@ export default function CalendarPermission() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white, paddingHorizontal: 24 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 20, paddingHorizontal: 8 },
   icon: {
@@ -98,4 +102,5 @@ const styles = StyleSheet.create({
   secondary: { minHeight: 48, alignItems: 'center', justifyContent: 'center' },
   secondaryText: { fontSize: 16, fontWeight: '700', color: colors.accent },
   footnote: { textAlign: 'center', fontSize: 13, lineHeight: 18, color: colors.muted },
-});
+  });
+}

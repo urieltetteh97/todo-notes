@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, HIT } from '../theme';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
+import { HIT, type ThemeColors } from '../theme';
 
 type Props =
   | { kind: 'back'; label: string; onPress: () => void }
@@ -8,6 +9,8 @@ type Props =
   | { kind: 'pill'; label: string; onPress: () => void; disabled?: boolean };
 
 export function HeaderButton(props: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   if (props.kind === 'back') {
     return (
       <Pressable
@@ -46,7 +49,8 @@ export function HeaderButton(props: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   back: { minHeight: HIT, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 },
   backText: { fontSize: 16, fontWeight: '600', color: colors.ink },
   icon: { width: HIT, height: HIT, alignItems: 'center', justifyContent: 'center' },
@@ -61,4 +65,5 @@ const styles = StyleSheet.create({
   },
   pillDisabled: { opacity: 0.5 },
   pillText: { fontSize: 15, fontWeight: '700', color: colors.pill },
-});
+  });
+}

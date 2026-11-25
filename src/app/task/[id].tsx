@@ -21,15 +21,18 @@ import { HeaderButton } from '../../components/HeaderButton';
 import { insertNote, listNotesForTask } from '../../db/notesRepo';
 import { getTask } from '../../db/tasksRepo';
 import { useFocusLoad } from '../../hooks/useFocusLoad';
+import { useTheme, useThemedStyles } from '../../hooks/useTheme';
 import { shouldAskForCalendarAccess } from '../../services/calendarPrompt';
 import { loadSyncSettings } from '../../services/syncSettings';
 import { deleteTask, updateTask } from '../../services/taskService';
-import { colors, HIT, radius } from '../../theme';
+import { HIT, radius, type ThemeColors } from '../../theme';
 import type { Note, Task } from '../../types';
 import { dateFromStrings, nextHour, toDateString, toTimeString } from '../../utils/dates';
 import { firstLine } from '../../utils/text';
 
 export default function TaskDetail() {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
 
   // The saved task (for calendar status) vs. the form fields being edited.
@@ -182,7 +185,7 @@ export default function TaskDetail() {
             <DateField
               mode="date"
               value={date}
-              onChange={changeDate}
+              onValueChange={changeDate}
               placeholder="Add date"
               accessibilityLabel="Due date"
               clearable
@@ -197,7 +200,7 @@ export default function TaskDetail() {
               value={hasTime}
               onValueChange={setHasTime}
               trackColor={{ false: colors.trackOff, true: colors.primary }}
-              thumbColor={colors.white}
+              thumbColor="#FFFFFF"
             />
           </View>
 
@@ -207,7 +210,7 @@ export default function TaskDetail() {
               <DateField
                 mode="time"
                 value={time}
-                onChange={(d) => d && setTime(d)}
+                onValueChange={(d) => d && setTime(d)}
                 placeholder="Add time"
                 accessibilityLabel="Due time"
               />
@@ -221,7 +224,7 @@ export default function TaskDetail() {
               value={done}
               onValueChange={setDone}
               trackColor={{ false: colors.trackOff, true: colors.primary }}
-              thumbColor={colors.white}
+              thumbColor="#FFFFFF"
             />
           </View>
         </View>
@@ -294,7 +297,8 @@ export default function TaskDetail() {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.white },
   content: { padding: 20, gap: 18, paddingBottom: 48 },
   label: {
@@ -366,4 +370,5 @@ const styles = StyleSheet.create({
   deleteText: { fontSize: 16, fontWeight: '700', color: colors.accent },
   missing: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   missingText: { fontSize: 16, color: colors.muted },
-});
+  });
+}

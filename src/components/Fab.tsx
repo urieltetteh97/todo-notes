@@ -1,10 +1,13 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors } from '../theme';
+import { useTheme, useThemedStyles } from '../hooks/useTheme';
+import type { ThemeColors } from '../theme';
 
 type Props = { onPress: () => void; accessibilityLabel: string };
 
 export function Fab({ onPress, accessibilityLabel }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <Pressable
       accessibilityRole="button"
@@ -17,7 +20,8 @@ export function Fab({ onPress, accessibilityLabel }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+function createStyles(colors: ThemeColors) {
+  return StyleSheet.create({
   fab: {
     position: 'absolute',
     right: 20,
@@ -35,4 +39,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
   },
   pressed: { opacity: 0.85 },
-});
+  });
+}
